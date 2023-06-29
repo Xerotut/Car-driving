@@ -45,10 +45,13 @@ namespace CarDriving
                     axleInfo.LeftWheel.motorTorque = motor;
                     axleInfo.RightWheel.motorTorque = motor;
                 }
+                axleInfo.ApplyLocalPositionToVisuals(axleInfo.LeftWheel, axleInfo.VisualLeft);
+                axleInfo.ApplyLocalPositionToVisuals(axleInfo.RightWheel, axleInfo.VisualRight);
             }
 
         }
 
+        
     }
 
 
@@ -57,9 +60,22 @@ namespace CarDriving
     public class AxleInfo
     {
         public WheelCollider LeftWheel;
+        public Transform VisualLeft;
         public WheelCollider RightWheel;
+        public Transform VisualRight;
         public bool Motor; // is this wheel attached to motor?
         public bool Steering; // does this wheel apply steer angle?
+
+        public void ApplyLocalPositionToVisuals(WheelCollider collider, Transform visualWheel)
+        {
+
+            Vector3 position;
+            Quaternion rotation;
+            collider.GetWorldPose(out position, out rotation);
+
+          //  visualWheel.transform.position = position;
+            visualWheel.transform.rotation = rotation;
+        }
     }
 
 }
