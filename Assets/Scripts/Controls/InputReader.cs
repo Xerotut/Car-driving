@@ -1,21 +1,30 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace CarDriving
 {
-    public class InputReader : MonoBehaviour
+    public static class InputReader
     {
-        // Start is called before the first frame update
-        void Start()
+        static InputReader()
         {
-        
+            _playerControls = new PlayerControls();
+            SubscribeToInputs();
+
+            _playerControls.Enable();
         }
 
-        // Update is called once per frame
-        void Update()
+        private readonly static PlayerControls _playerControls;
+
+
+        public static event Action<Vector2> OnMove;
+
+        private static void SubscribeToInputs()
         {
-        
+            _playerControls.CarControls.Move.performed += ctx => OnMove?.Invoke(ctx.ReadValue<Vector2>());
+            _playerControls.CarControls.Move.canceled += ctx => OnMove?.Invoke(Vector2.zero);
         }
     }
 }
